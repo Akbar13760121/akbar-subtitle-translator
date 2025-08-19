@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مترجم زیرنویس اکبر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDQwQzMxLjA0NTcgNDAgNDAgMzEuMDQ1NyA0MCAyMEM0MCA4Ljk1NDMxIDMxLjA0NTcgMCAyMCAwQzguOTU0MzEgMCAwIDguOTU0MzEgMCAyMEMwIDMxLjA0NTcgOC45NTQzMSA0MCAyMCA0MFoiIGZpbGw9IiMwMEI5RkYiLz4KPHBhdGggZD0iTTI2LjY2NjYgMTYuNjY2N0wyMCAyMy4zMzMzTDEzLjMzMzMgMTYuNjY2N0wxMCAyMEwxOC4zMzMzIDI4LjMzMzNMMjAgMzBMMjEuNjY2NiAyOC4zMzMzTDMwIDIwTDI2LjY2NjYgMTYuNjY2N0oiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Logo">
+                <h1>مترجم زیرنویس اکبر</h1>
+            </div>
+            <button id="theme-toggle" class="btn-icon">
+                <i class="fa-solid fa-sun"></i>
+            </button>
+        </header>
+
+        <main class="main-content">
+            <div class="card file-upload-card">
+                <label for="file-input" class="file-drop-zone">
+                    <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
+                    <p>فایل زیرنویس را اینجا رها کنید یا کلیک کنید</p>
+                    <small>فرمت‌های پشتیبانی شده: srt, .vtt.</small>
+                    <input type="file" id="file-input" accept=".srt,.vtt" hidden>
+                </label>
+                <div id="file-info-container"></div>
+            </div>
+
+            <details class="card accordion" open>
+                <summary>
+                    <h3>تنظیمات ترجمه</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </summary>
+                <div class="accordion-content">
+                    <label for="model-selector">انتخاب مدل ترجمه</label>
+                    <select id="model-selector">
+                        <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (پیشنهادی)</option>
+                        <option value="gemini-1.5-pro-latest">Gemini 1.5 Pro (قدرتمند)</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro (آزمایشی)</option>
+                    </select>
+
+                    <div class="advanced-controls">
+                        <div>
+                            <label for="temperature-input">Temperature (دما)</label>
+                            <input type="number" id="temperature-input" min="0" max="1" step="0.1" value="0.7">
+                            <small>مقدار خلاقیت (0.1 = دقیق، 0.9 = خلاق)</small>
+                        </div>
+                        <div>
+                            <label for="delay-input">Request Delay (ms)</label>
+                            <input type="number" id="delay-input" min="0" step="100" value="1000">
+                            <small>تأخیر بین درخواست‌ها (۱۰۰۰ = ۱ ثانیه)</small>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details class="card accordion">
+                <summary>
+                    <h3>مهندسی پرامپت (پیشرفته)</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </summary>
+                <div class="accordion-content">
+                    <label for="prompt-preset-selector">انتخاب پریست پرامپت</label>
+                    <select id="prompt-preset-selector">
+                        <option value="cinematic">سینمایی (پیش‌فرض)</option>
+                        <option value="youtube">یوتیوبی (محاوره‌ای و مدرن)</option>
+                        <option value="documentary">مستند (رسمی و دقیق)</option>
+                        <option value="comedy">کمدی (خلاقانه)</option>
+                    </select>
+
+                    <label for="system-prompt-display">پرامپت اصلی سیستم (فقط خواندنی)</label>
+                    <textarea id="system-prompt-display" rows="10" readonly></textarea>
+
+                    <label for="custom-prompt-input">دستورالعمل سفارشی شما (اختیاری)</label>
+                    <textarea id="custom-prompt-input" rows="3" placeholder="مثال: ترجمه کاملا رسمی و ادبی باشد."></textarea>
+                </div>
+            </details>
+
+            <details class="card accordion">
+                <summary>
+                    <h3>ابزارهای ویرایش</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </summary>
+                <div class="accordion-content">
+                    <label for="find-input">پیدا کردن:</label>
+                    <input type="text" id="find-input" placeholder="کلمه‌ای که می‌خواهید پیدا کنید...">
+                    
+                    <label for="replace-input">جایگزینی با:</label>
+                    <input type="text" id="replace-input" placeholder="کلمه جدید...">
+                    
+                    <div class="action-buttons">
+                        <button id="replace-all-btn" class="btn btn-secondary">
+                            <i class="fa-solid fa-retweet"></i> جایگزینی همه
+                        </button>
+                        <span id="match-count" class="match-count-text">۰ مورد یافت شد</span>
+                    </div>
+                </div>
+            </details>
+
+            <details class="card accordion" open>
+                <summary>
+                    <h3>شروع و پیشرفت ترجمه</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </summary>
+                <div class="accordion-content">
+                    <label>پیشرفت</label>
+                    <progress id="progress-bar" value="0" max="100"></progress>
+                    <small id="progress-text">آماده برای شروع ترجمه</small>
+
+                    <div class="action-buttons">
+                        <button id="translate-button" class="btn btn-primary" disabled>
+                            <i class="fa-solid fa-play"></i> شروع ترجمه
+                        </button>
+                        <button id="stop-button" class="btn btn-secondary" style="display: none;">
+                            <i class="fa-solid fa-pause"></i> مکث
+                        </button>
+                    </div>
+                     <a href="#" id="download-link" class="btn btn-outline" style="display: none;">
+                        <i class="fa-solid fa-download"></i> دانلود فایل
+                    </a>
+                </div>
+            </details>
+
+            <div class="card editor-card">
+                <div class="editor-header">
+                    <h3>ویرایشگر زیرنویس</h3>
+                    <div class="subtitle-stats">
+                        <div class="language-selector">
+                            <span>زبان مبدا: از هر زبانی</span>
+                            <span class="active">زبان مقصد: فارسی</span>
+                        </div>
+                        <span id="subtitle-block-count">تعداد بلاک‌ها: ۰</span>
+                    </div>
+                </div>
+                <div class="editor-grid-header">
+                    <h4>متن اصلی</h4>
+                    <h4>متن ترجمه شده</h4>
+                </div>
+                <div id="editor-grid" class="editor-grid">
+                    <div class="placeholder">
+                        <i class="fa-regular fa-file-lines fa-3x"></i>
+                        <p>هیچ فایل زیرنویسی بارگذاری نشده است</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
