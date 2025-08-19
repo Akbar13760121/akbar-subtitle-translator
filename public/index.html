@@ -43,9 +43,19 @@
                     
                     <label for="model-selector">انتخاب مدل ترجمه</label>
                     <select id="model-selector">
-                        <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (پیشنهادی)</option>
-                        <option value="gemini-1.5-pro-latest">Gemini 1.5 Pro (قدرتمند)</option>
-                        <option value="gemini-2.5-pro">Gemini 2.5 Pro (آزمایشی)</option>
+                        <!-- ===== مدل‌های پیشنهادی و پایدار ===== -->
+                        <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (سریع و بهینه)</option>
+                        <option value="gemini-1.5-pro-latest">Gemini 1.5 Pro (قدرتمندترین)</option>
+                        <option value="gemini-1.0-pro">Gemini 1.0 Pro (پایدار)</option>
+                        
+                        <!-- ===== مدل‌های آزمایشی و آینده ===== -->
+                        <optgroup label="مدل‌های آزمایشی (ممکن است کار نکنند)">
+                            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite</option>
+                            <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash-Lite</option>
+                        </optgroup>
                     </select>
 
                     <div class="advanced-controls">
