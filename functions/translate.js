@@ -10,11 +10,9 @@ export async function onRequest(context) {
     const { prompt, model, temperature } = await context.request.json();
 
     // کلید API محرمانه خود را از تنظیمات Cloudflare می‌خوانیم.
-    // نام این متغیر GEMINI_API_KEY است که بعداً در سایت Cloudflare تنظیم می‌کنیم.
     const apiKey = context.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      // اگر کلید API تنظیم نشده بود، یک خطا برمی‌گردانیم.
       return new Response('API key not configured on the server', { status: 500 });
     }
 
