@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- ===== HEADER ===== -->
         <header class="app-header">
             <div class="logo">
                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDQwQzMxLjA0NTcgNDAgNDAgMzEuMDQ1NyA0MCAyMEM0MCA4Ljk1NDMxIDMxLjA0NTcgMCAyMCAwQzguOTU0MzEgMCAwIDguOTU0MzEgMCAyMEMwIDMxLjA0NTcgOC45NTQzMSA0MCAyMCA0MFoiIGZpbGw9IiMwMEI5RkYiLz4KPHBhdGggZD0iTTI2LjY2NjYgMTYuNjY2N0wyMCAyMy4zMzMzTDEzLjMzMzMgMTYuNjY2N0wxMCAyMEwxOC4zMzMzIDI4LjMzMzNMMjAgMzBMMjEuNjY2NiAyOC4zMzMzTDMwIDIwTDI2LjY2NjYgMTYuNjY2N0oiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Logo">
@@ -19,6 +20,7 @@
             </button>
         </header>
 
+        <!-- ===== MAIN CONTENT AREA (Single Column) ===== -->
         <main class="main-content">
             <div class="card file-upload-card">
                 <label for="file-input" class="file-drop-zone">
@@ -32,10 +34,13 @@
 
             <details class="card accordion" open>
                 <summary>
-                    <h3>تنظیمات ترجمه</h3>
+                    <h3>فعال‌سازی و تنظیمات</h3>
                     <i class="fa-solid fa-chevron-down"></i>
                 </summary>
                 <div class="accordion-content">
+                    <label for="api-keys">کلید(های) Gemini API (ذخیره خودکار)</label>
+                    <textarea id="api-keys" rows="3" placeholder="کلید(های) خود را اینجا وارد کنید (هر کدام در یک خط)"></textarea>
+                    
                     <label for="model-selector">انتخاب مدل ترجمه</label>
                     <select id="model-selector">
                         <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (پیشنهادی)</option>

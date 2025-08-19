@@ -1,5 +1,5 @@
 // ===== DOM Elements =====
-// REMOVED: apiKeyInput is no longer needed in the frontend
+const apiKeyInput = document.getElementById('api-keys');
 const modelSelector = document.getElementById('model-selector');
 const temperatureInput = document.getElementById('temperature-input');
 const delayInput = document.getElementById('delay-input');
@@ -28,21 +28,23 @@ let isTranslating = false;
 let isPaused = false;
 let currentTranslationIndex = 0;
 
-// ===== WORLD-CLASS, PROFESSIONAL LOCALIZER PROMPT (FINAL VERSION with IRONCLAD RULE) =====
+// ===== WORLD-CLASS, PROFESSIONAL LOCALIZER PROMPT (FINAL VERSION with GOLDEN RULE) =====
 const PROMPT_PRESETS = {
-    cinematic: `THE IRONCLAD RULE (YOUR ONLY TASK):
-Your one and only job is to find the object with "index": 0 in the JSON provided in {{CONTEXT}}. You must translate the "text" field of THAT OBJECT ONLY. All other information is for context and must be ignored in your output. Any output that is not the direct translation of the text at "index": 0 is a failure.
----
-You are a world-class cinematic subtitle localizer and cultural adapter.
+    cinematic: `You are a world-class cinematic subtitle localizer and cultural adapter.
+
+THE GOLDEN RULE (PRIME DIRECTIVE):
+Your primary, non-negotiable duty is to translate the **meaning and intent** of the original text. All stylistic choices must serve this primary duty. **Never invent dialogue or change the core meaning.** If you must choose between perfect fluency and perfect fidelity to the meaning, always choose fidelity to the meaning.
+
 CORE TRANSLATION PHILOSOPHY:
-1.  **Fidelity First (وفاداری در اولویت):** Your primary, non-negotiable duty is to translate the **meaning and intent** of the original text. All stylistic choices must serve this primary duty. Never invent dialogue or change the core meaning.
-2.  **Context Mastery (تسلط بر محتوا - اجباری):** This is not a suggestion; it is a mandatory step. The meaning of the 'current' subtitle is often incomplete without the surrounding dialogue. Before translating, you MUST analyze the 'previous' and 'next' subtitles to determine the correct tone, terminology, and emotional state.
-    - **Example:** If 'previous' is "Did you see that explosion?" and 'current' is "Yeah.", your translation should be a context-aware "آره" or "دیدم", not a generic "بله".
+1.  **Balance is Key:** Within the Golden Rule, find the perfect balance between semantic accuracy and conversational fluency.
+2.  **Context is King:** Use the provided previous and next subtitles relentlessly to understand the flow of conversation, character relationships, and the overall tone.
+
 CRITICAL INSTRUCTION:
 The JSON array in {{CONTEXT}} contains subtitles with different indices:
 - Index -1 or lower = "previous" subtitles
 - Index 0 = "current" subtitle (THE ONLY ONE YOU TRANSLATE)
 - Index 1 or higher = "next" subtitles
+
 TRANSLATION STYLE REQUIREMENTS:
 1.  **Natural and Conversational:** The translation must sound like something a real person would say.
 2.  **Prioritize Flow:** If a literal translation is awkward, rephrase it to be more natural in Persian, while preserving the core meaning.
@@ -50,21 +52,56 @@ TRANSLATION STYLE REQUIREMENTS:
 4.  **Maintain Character Voice:** Reflect the character's personality in your word choice.
 5.  **Consistency is Crucial:** Names, places, and key technical terms must be translated consistently.
 6.  **Interpret Interjections:** Pay extremely close attention to simple words like "Oh," "Ah," "Well," etc. Their meaning is 100% dependent on context. Choose the most fitting Persian equivalent.
+
 {{USER_INSTRUCTIONS}}
+
 ABSOLUTE FIDELITY REQUIREMENT:
 - Your translation MUST be 100% faithful to the original text's **MEANING, INTENT, AND NUANCE**.
 - **Uncensored Translation:** Translate all words, including profanity, faithfully and without censorship.
 - **No Guessing (حدس ممنوع):** If you encounter a technical term you do not recognize, keep the original term in English.
+- DO NOT add information that is not present in the original's intent.
+- DO NOT omit information that is essential to the original's meaning.
+
 STRICT RULES:
 1. Your ENTIRE response must contain ONLY the Persian translation of the "current" subtitle text.
 2. DO NOT output ANY words from "previous" or "next" subtitles.
 3. DO NOT output ANY explanations.
+
+The "previous" and "next" subtitles exist ONLY for your reference to understand context.
+
 YOUR RESPONSE MUST BE EXACTLY ONE THING: The Persian translation of ONLY the "current" subtitle text.`,
-    youtube: ``,
+    youtube: `You are a professional YouTube content localizer. Your mission is to create Persian subtitles that are engaging, clear, and perfectly match the fast-paced, direct-to-camera style of YouTube videos.
+
+CORE TRANSLATION PHILOSOPHY:
+1.  **Clarity at Speed (وضوح در سرعت):** This is your highest priority. Viewers read subtitles quickly. Your translation must be instantly understandable, concise, and punchy.
+2.  **Match the Creator's Energy (هماهنگی با انرژی تولیدکننده):** Your main goal is to convey the creator's personality and energy (e.g., hyped, comedic, serious, educational). The "vibe" is more important than a literal word-for-word translation.
+3.  **Direct Connection (ارتباط مستقیم با مخاطب):** Maintain the direct, personal connection YouTubers have with their audience. Translate phrases like "you guys" or "let me know" into friendly, direct Persian equivalents (e.g., "بچه‌ها", "برام بنویسید").
+
+TRANSLATION STYLE REQUIREMENTS:
+1.  **Modern & Relatable Language:** Use modern, everyday Persian slang and phrasing that the target audience would use. The goal is to sound current, not like a textbook.
+2.  **Standardize YouTube Phrases (استانداردسازی اصطلاحات یوتیوب):** Use common, effective translations for standard YouTube calls-to-action. For example:
+    - "Like and subscribe" → "لایک و سابسکرایب یادتون نره"
+    - "Link in the description" → "لینک در توضیحات ویدیو هست"
+    - "Thanks for watching" → "ممنون که تماشا کردید"
+3.  **Uncensored & Authentic:** Translate all language, including profanity, faithfully to match the creator's authentic voice.
+
+{{USER_INSTRUCTIONS}}
+
+CRITICAL TECHNICAL RULES:
+The JSON array in {{CONTEXT}} contains subtitles with indices:
+- Index -1 or lower: Previous subtitles (reference only)
+- Index 0: Current subtitle (translate only this one)
+- Index 1 or higher: Next subtitles (reference only)
+
+ONLY translate the “current” subtitle (index = 0).
+DO NOT output explanations, extra formatting, or any other text.
+Keep proper names and brands in English unless there is a very common Persian version.
+
+YOUR OUTPUT:
+Output only the Persian translation of the “current” subtitle.`,
     documentary: ``,
     comedy: ``
 };
-PROMPT_PRESETS.youtube = PROMPT_PRESETS.cinematic.replace('world-class cinematic subtitle localizer', 'professional YouTube content localizer');
 PROMPT_PRESETS.documentary = PROMPT_PRESETS.cinematic.replace('cinematic subtitle localizer', 'highly precise technical translator for documentaries').replace('Conversational and Natural', 'Formal and Accurate');
 PROMPT_PRESETS.comedy = PROMPT_PRESETS.cinematic.replace('cinematic subtitle localizer', 'creative and witty translator specializing in comedy').replace('Conversational and Natural', 'Humorous and Colloquial');
 
@@ -83,6 +120,7 @@ promptPresetSelector.addEventListener('change', () => {
     updatePromptDisplay();
     saveSettings();
 });
+apiKeyInput.addEventListener('input', saveSettings);
 modelSelector.addEventListener('change', saveSettings);
 customPromptInput.addEventListener('input', saveSettings);
 temperatureInput.addEventListener('input', saveSettings);
@@ -93,6 +131,7 @@ replaceAllBtn.addEventListener('click', handleReplaceAll);
 
 // ===== Settings & Theme Functions =====
 function saveSettings() {
+    localStorage.setItem('apiKeys', apiKeyInput.value);
     localStorage.setItem('selectedModel', modelSelector.value);
     localStorage.setItem('temperature', temperatureInput.value);
     localStorage.setItem('requestDelay', delayInput.value);
@@ -101,6 +140,7 @@ function saveSettings() {
 }
 
 function loadSettings() {
+    apiKeyInput.value = localStorage.getItem('apiKeys') || '';
     modelSelector.value = localStorage.getItem('selectedModel') || 'gemini-1.5-flash-latest';
     temperatureInput.value = localStorage.getItem('temperature') || '0.7';
     delayInput.value = localStorage.getItem('requestDelay') || '1000';
@@ -287,6 +327,11 @@ function handlePauseTranslation() {
 }
 
 async function startTranslation() {
+    const apiKeys = apiKeyInput.value.split('\n').map(k => k.trim()).filter(Boolean);
+    if (apiKeys.length === 0) {
+        alert('لطفاً حداقل یک کلید Gemini API وارد کنید.');
+        return;
+    }
     if (isTranslating) return;
     isTranslating = true;
     isPaused = false;
@@ -297,7 +342,7 @@ async function startTranslation() {
     translateButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ترجمه...';
     stopButton.style.display = 'flex';
     downloadLink.style.display = 'none';
-    await runSequentialTranslation();
+    await runSequentialTranslation(apiKeys);
     if (isPaused) {
         updateUIOnPause();
     } else {
@@ -308,8 +353,9 @@ async function startTranslation() {
     }
 }
 
-async function runSequentialTranslation() {
+async function runSequentialTranslation(apiKeys) {
     const totalCount = parsedSubtitles.length;
+    let keyIndex = 0;
     const requestDelay = parseInt(delayInput.value, 10) || 0;
     for (let i = currentTranslationIndex; i < totalCount; i++) {
         if (isPaused) {
@@ -345,7 +391,9 @@ async function runSequentialTranslation() {
             }
             const contextJson = JSON.stringify(contextWindow, null, 2);
             finalPrompt = finalPrompt.replace('{{CONTEXT}}', `\n${contextJson}\n`);
-            const translatedText = await translateTextWithRetry(finalPrompt);
+            const currentApiKey = apiKeys[keyIndex % apiKeys.length];
+            keyIndex++;
+            const translatedText = await translateTextWithRetry(finalPrompt, currentApiKey);
             sub.translatedText = translatedText;
             updateTranslatedView(sub);
         } catch (error) {
@@ -365,11 +413,11 @@ async function runSequentialTranslation() {
     }
 }
 
-async function translateTextWithRetry(prompt) {
+async function translateTextWithRetry(prompt, apiKey) {
     let retries = 3;
     while (retries > 0) {
         try {
-            const translatedText = await translateText(prompt);
+            const translatedText = await translateText(prompt, apiKey);
             return translatedText;
         } catch (error) {
             retries--;
@@ -388,18 +436,24 @@ async function translateTextWithRetry(prompt) {
     }
 }
 
-async function translateText(textToTranslate) {
+async function translateText(textToTranslate, apiKey) {
     const selectedModel = modelSelector.value;
     const temperature = parseFloat(temperatureInput.value) || 0.7;
-    const API_URL = `/functions/translate`;
-    
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            prompt: textToTranslate,
-            model: selectedModel,
-            temperature: temperature
+            contents: [{ parts: [{ text: textToTranslate }] }],
+            generationConfig: {
+                temperature: temperature,
+            },
+            safetySettings: [
+                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+            ]
         })
     });
     if (!response.ok) {
